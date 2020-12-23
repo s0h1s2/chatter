@@ -1,0 +1,83 @@
+<%- include("../layout") %>                      
+<div class="container pt-3 my-4">
+    <div class="row flex-row flex-sm-nowrap">
+        <div class="col-md-6">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h6 class="card-title">Online users</h6>
+                    <div class="items border border-light" id="onlineUsers">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+  <input type="hidden" id="reciver">
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Chat</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <ul id="chat">
+            </ul>
+        </div>
+        <div class="modal-footer">
+           <input type="text" class="form-control" id="chattext">
+          <button type="button" class="btn btn-primary" onclick="sendTextChat()" >Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<script>
+    var socket=io();
+    let id="<%= user.id %>";
+    let name="<%= user.username%>";
+    let parent=document.getElementById('onlineUsers');
+    socket.emit('login',{id,name});
+    socket.on("add user",(data)=>{
+        parent.innerHTML='';
+        for(let key in data)
+        {
+            if(key==id)
+            {
+                continue;
+
+            }
+            let card=`
+            <div class="card" id=${key}>
+                <div class="card-body">
+                    <p><a data-toggle="modal" onclick="setReciver('${key}')" data-target="#exampleModal" href="#${key}">${data[key].name}</a></p>
+                </div>
+            </div>
+        `;
+        parent.insertAdjacentHTML('afterbegin',card);
+        }
+    });
+    socket.on('message recivce',(data)=>{
+        console.log(data.text);
+        
+        alert(data.text);
+
+    })
+    socket.on('user disconnect',(data)=>{
+        document.getElementById(data.id).remove();
+
+    });
+
+    function setReciver(id){
+        document.getElementById('reciver').value=id;
+    }
+    function sendTextChat(){
+        let text=document.getElementById('chattext').value;
+        let reciver=document.getElementById('reciver').value;
+        socket.emit("user send",{text:text,reciver:reciver,sender:id})
+    }
+</script> 
+<%- include("../footer") %> 

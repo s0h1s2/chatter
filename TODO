@@ -1,0 +1,25 @@
+[x] setup express and socket.io server
+[x] setup ejs
+[x] setup layout page
+[x] setup bootstrap
+[x] setup socket.io client
+[x] render login page
+[x] setup client and views using ejs
+
+[x] create login page
+[x] create register page
+[x] create dashboard page
+[x] setup mongodb and mongoose 
+[x] create user model to store data in database
+[x] implement user register 
+    [x] implement user validation 
+    [x] show errors to the form
+    [x] check if username is unique
+[x] implement authentication by username and email
+    [x] check if user exsist in database 
+    [x] check if password is true
+[x] implement router guard for dashboard 
+
+
+
+
